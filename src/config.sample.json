@@ -1,0 +1,58 @@
+{
+  "api" : {
+    "url" : "http://host.for.kibana:5601",
+    "username" : "elastic-user",
+    "password" : "elastic-pass"
+  },
+  "notification" : {
+    "sendgrid" : {
+      "key" : "sendgrid-api-key",
+      "delivery" : {
+      "from" : {
+        "name": "Your Company",
+        "email": "your@company.com"
+      },
+      "to" : [
+          "user1@test.com",
+          "user2@test.com"
+        ]
+      }
+    },
+    "smtp" : {
+      "addr" : "smtp.mailtrap.io:2525",
+      "host" : "smtp.mailtrap.io",
+      "username" : "smtp-user",
+      "password" : "smtp-pass",
+      "delivery" : {
+      "from" : {
+        "name": "Your Company",
+        "email": "your@company.com"
+      },
+      "to" : [
+          "user1@test.com",
+          "user2@test.com"
+        ]
+      }
+    }
+  },
+  "rules" : {
+    "default" : {
+      "notifyInterval" : 600,
+      "notifyOn" : ["active", "recover"]
+    },
+    "custom" :[
+      {
+        "ruleId" : "example-rule-id",
+        "notifyOn" : ["active", "recover"],
+        "threshold" : 10,
+        "notifyInterval" : 900
+      },
+      {
+        "ruleId" : "example-rule-id",
+        "notifyOn" : ["active", "recover"],
+        "threshold" : 10,
+        "notifyInterval" : 900
+      }
+    ]
+  }
+}
