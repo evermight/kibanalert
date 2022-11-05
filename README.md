@@ -1,10 +1,10 @@
 # GETTING STARTED
 
 
-You only need the `./release/run` and `./release/.env` to use kibanalert.  Here's how:
+You only need the `./bin/run` and `./bin/.env` to use kibanalert.  Here's how:
 
 ```
-cd ./release
+cd ./bin
 cp env.sample .env
 ```
 
@@ -50,3 +50,7 @@ And that alerts populate index with this document template:
   "date": "{{date}}"
 }
 ```
+
+# DEVELOPMENT
+
+The source code can be found in the `~/src` directory.  Use the `~/src/env.sample` as template for your `~/src/.env`.  Run the command `cd ~/src/ && go run run.go` to run the application.
