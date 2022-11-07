@@ -23,8 +23,7 @@ func main() {
 	for true {
 		currentRules := rules.Get(
 			os.Getenv("KIBANA_URL"),
-			os.Getenv("KIBANA_USER"),
-			os.Getenv("KIBANA_PASS"),
+			os.Getenv("ELASTIC_API_KEY"),
 		)
 		for _, rule := range currentRules.Rules {
 			ruleId := rule.RuleId
@@ -35,8 +34,7 @@ func main() {
 				ruleId,
 				os.Getenv("CONNECTOR_INDEX_NAME"),
 				os.Getenv("ELASTIC_URL"),
-				os.Getenv("ELASTIC_USER"),
-				os.Getenv("ELASTIC_PASS"),
+				os.Getenv("ELASTIC_API_KEY"),
 			)
 			hit := currentAlert.Hits.Hits[0]
 			if previousHitId[ruleId] != hit.HitId {

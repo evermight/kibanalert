@@ -7,13 +7,14 @@ import (
 	"net/http"
 )
 
-func Get(apiUrl, username, password string) Rules {
+func Get(apiUrl, apiKey string) Rules {
 	req, err := http.NewRequest(http.MethodGet, apiUrl+"/api/alerting/rules/_find", nil)
 	if err != nil {
 		fmt.Println("Error", err)
 		return Rules{}
 	}
-	req.SetBasicAuth(username, password)
+	req.Header.Set("Authorization", "ApiKey "+apiKey)
+	//req.SetBasicAuth(username, password)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Println("Error", err)

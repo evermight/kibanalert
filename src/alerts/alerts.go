@@ -8,7 +8,7 @@ import (
 	"net/http"
 )
 
-func Get(ruleId, indexName, apiUrl, username, password string) Alerts {
+func Get(ruleId, indexName, apiUrl, apiKey string) Alerts {
 	var jsonData = []byte(`{
   "query": {
    "term": {
@@ -18,12 +18,13 @@ func Get(ruleId, indexName, apiUrl, username, password string) Alerts {
   "size": 1,
   "sort": [{"date":{"order":"desc"}}]}`)
 	req, err := http.NewRequest(http.MethodGet, apiUrl+"/"+indexName+"/_search", bytes.NewBuffer(jsonData))
-	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
 	if err != nil {
 		fmt.Println("Error", err)
 		return Alerts{}
 	}
-	req.SetBasicAuth(username, password)
+	req.Header.Set("Content-Type", "application/json; charset=UTF-8")
+	req.Header.Set("Authorization", "ApiKey "+apiKey)
+	// req.SetBasicAuth(username, password)
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Println("Error", err)
