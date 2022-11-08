@@ -53,4 +53,4 @@ And that alerts populate index with this document template:
 
 # DEVELOPMENT
 
-The source code can be found in the `~/src` directory.  Use the `~/src/env.sample` as template for your `~/src/.env`.  Run the command `cd ~/src/ && go run run.go` to run the application.
+The source code can be found in the `~/src` directory.  Use the `~/src/env.sample` as template for your `~/src/.env`.  Run the command `cd ~/src/ && go run run.go` to run the application.  You can also use `cd ~/src/ && go build run.go && mv run ~/bin` to make a new binary file.
