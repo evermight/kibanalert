@@ -36,13 +36,15 @@ func main() {
 				os.Getenv("ELASTIC_URL"),
 				os.Getenv("ELASTIC_API_KEY"),
 			)
-			hit := currentAlert.Hits.Hits[0]
-			if previousHitId[ruleId] != hit.HitId {
-				notify.Notify(hit.Source)
-				previousHitId[ruleId] = hit.HitId
-				fmt.Println("Emailed " + hit.HitId)
-			} else {
-				fmt.Println("Skipped " + hit.HitId)
+			if len(currentAlert.Hits.Hits) > 0 {
+				hit := currentAlert.Hits.Hits[0]
+				if previousHitId[ruleId] != hit.HitId {
+					notify.Notify(hit.Source)
+					previousHitId[ruleId] = hit.HitId
+					fmt.Println("Emailed " + hit.HitId)
+				} else {
+					fmt.Println("Skipped " + hit.HitId)
+				}
 			}
 		}
 		time.Sleep(time.Duration(scanInterval) * time.Second)
