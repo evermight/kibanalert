@@ -1,6 +1,7 @@
 package notify
 
 import (
+	"errors"
 	"fmt"
 	"github.com/sendgrid/sendgrid-go"
 	"github.com/sendgrid/sendgrid-go/helpers/mail"
@@ -9,7 +10,7 @@ import (
 	"strings"
 )
 
-func SendGrid(source alerts.Source) {
+func SendGrid(source alerts.Source) error {
 	apiKey := os.Getenv("SENDGRID_KEY")
 
 	from := mail.NewEmail(os.Getenv("SENDGRID_FROM_NAME"), os.Getenv("SENDGRID_FROM_EMAIL"))
@@ -30,13 +31,8 @@ func SendGrid(source alerts.Source) {
 		//response, err := client.Send(message)
 		_, err := client.Send(message)
 		if err != nil {
-			fmt.Println(err)
-		} else {
-			/*
-				fmt.Println(response.StatusCode)
-				fmt.Println(response.Body)
-				fmt.Println(response.Headers)
-			*/
+			return errors.New(fmt.Sprintf("SendGrid: From %v %v", from, err))
 		}
 	}
+	return nil
 }

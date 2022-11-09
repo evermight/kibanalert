@@ -6,10 +6,10 @@ import (
 	"strings"
 )
 
-type sendfunc func(alerts.Source)
+type sendfunc func(alerts.Source) error
 
-func Notify(source alerts.Source) {
-
+func Notify(source alerts.Source) []error {
+	var errorList []error
 	notifyMethods := strings.Split(os.Getenv("NOTIFY_METHODS"), ",")
 
 	adapters := map[string]sendfunc{
@@ -18,6 +18,13 @@ func Notify(source alerts.Source) {
 	}
 
 	for _, meth := range notifyMethods {
-		adapters[strings.TrimSpace(meth)](source)
+		err := adapters[strings.TrimSpace(meth)](source)
+		if err != nil {
+			if errorList == nil {
+				errorList = []error{}
+			}
+			errorList = append(errorList, err)
+		}
 	}
+	return errorList
 }

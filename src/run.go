@@ -19,6 +19,7 @@ func main() {
 	}
 
 	previousHitId := map[string]string{}
+	debug := os.Getenv("DEBUG") == "1"
 
 	for true {
 		currentRules := rules.Get(
@@ -39,11 +40,17 @@ func main() {
 			if len(currentAlert.Hits.Hits) > 0 {
 				hit := currentAlert.Hits.Hits[0]
 				if previousHitId[ruleId] != hit.HitId {
-					notify.Notify(hit.Source)
+					if debug {
+						fmt.Println("Notifying hit.HitId: " + hit.HitId)
+					}
+					if errs := notify.Notify(hit.Source); errs != nil {
+						fmt.Println("Notification Failures: ", errs)
+					}
 					previousHitId[ruleId] = hit.HitId
-					fmt.Println("Emailed " + hit.HitId)
 				} else {
-					fmt.Println("Skipped " + hit.HitId)
+					if debug {
+						fmt.Println("Skipping hit.HitId: " + hit.HitId)
+					}
 				}
 			}
 		}
