@@ -24,10 +24,13 @@ func SMTP(source alerts.Source) error {
 	recipients := strings.Split(os.Getenv("SMTP_TO_EMAIL"), ",")
 	for _, recipient := range recipients {
 		to := strings.TrimSpace(recipient)
-		msg := []byte("From: " + os.Getenv("SMTP_FROM_NAME") + " <" + os.Getenv("SMTP_FROM_EMAIL") + ">\r\n" +
-			"To: " + to + "\r\n" +
-			"Subject: " + subject + "\r\n\r\n" +
-			plainTextContent + "\r\n")
+		msg := []byte(fmt.Sprintf("From: %v <%v>\r\nTo: %v\r\nSubject: %v\r\n\r\n%v\r\n",
+			os.Getenv("SMTP_FROM_NAME"),
+			os.Getenv("SMTP_FROM_EMAIL"),
+			to,
+			subject,
+			plainTextContent,
+		))
 
 		auth := smtp.PlainAuth("", user, password, host)
 

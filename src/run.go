@@ -27,29 +27,31 @@ func main() {
 			os.Getenv("ELASTIC_API_KEY"),
 		)
 		for _, rule := range currentRules.Rules {
-			ruleId := rule.RuleId
-			if _, ok := previousHitId[ruleId]; !ok {
-				previousHitId[ruleId] = ""
-			}
-			currentAlert := alerts.Get(
-				ruleId,
-				os.Getenv("CONNECTOR_INDEX_NAME"),
-				os.Getenv("ELASTIC_URL"),
-				os.Getenv("ELASTIC_API_KEY"),
-			)
-			if len(currentAlert.Hits.Hits) > 0 {
-				hit := currentAlert.Hits.Hits[0]
-				if previousHitId[ruleId] != hit.HitId {
-					if debug {
-						fmt.Println("Notifying hit.HitId: " + hit.HitId)
-					}
-					if errs := notify.Notify(hit.Source); errs != nil {
-						fmt.Println("Notification Failures: ", errs)
-					}
-					previousHitId[ruleId] = hit.HitId
-				} else {
-					if debug {
-						fmt.Println("Skipping hit.HitId: " + hit.HitId)
+			if rule.ExecutionStatus.Status == "active" {
+				ruleId := rule.RuleId
+				if _, ok := previousHitId[ruleId]; !ok {
+					previousHitId[ruleId] = ""
+				}
+				currentAlert := alerts.Get(
+					ruleId,
+					os.Getenv("CONNECTOR_INDEX_NAME"),
+					os.Getenv("ELASTIC_URL"),
+					os.Getenv("ELASTIC_API_KEY"),
+				)
+				if len(currentAlert.Hits.Hits) > 0 {
+					hit := currentAlert.Hits.Hits[0]
+					if previousHitId[ruleId] != hit.HitId {
+						if debug {
+							fmt.Println(fmt.Sprintf("Notifying %v hit.HitId: %v", rule.Name, hit.HitId))
+						}
+						if errs := notify.Notify(hit.Source); errs != nil {
+							fmt.Println("Notification Failures: ", errs)
+						}
+						previousHitId[ruleId] = hit.HitId
+					} else {
+						if debug {
+							fmt.Println(fmt.Sprintf("Skipping %v hit.HitId: %v", rule.Name, hit.HitId))
+						}
 					}
 				}
 			}
